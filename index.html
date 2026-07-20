@@ -1,52 +1,42 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-
-<title>Crystal Parcheesi 2.0</title>
-
-<link rel="stylesheet" href="css/style.css">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Crystal Parcheesi 2.0</title>
+    <link rel="stylesheet" href="css/style.css">
     
-<script src="https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js"></script>    
-
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- Cannon.js القديمة (تُنشئ CANNON عالمياً) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cannon.js/0.6.2/cannon.min.js"></script>
 </head>
-
 <body>
 
-<div id="loading">
-    <h2>Crystal Parcheesi</h2>
-    <p>جاري تحميل اللعبة...</p>
-</div>
-
-<div id="canvas-wrap"></div>
-
-<div id="hud">
-    <div id="turn-label"></div>
-
-    <div id="dice-panel">
-    <button id="roll-btn">🎲 رمي النرد</button>
-
-    <div id="dice-face">-</div>
-
-    <div id="dice-result"></div>
+    <div id="loading">
+        <h2>Crystal Parcheesi</h2>
+        <p>جاري تحميل اللعبة...</p>
     </div>
 
-    <div id="message"></div>
+    <div id="canvas-wrap"></div>
 
-    <div id="bot-thinking">🤖 يفكر الذكاء الاصطناعي...</div>
-</div>
+    <div id="hud">
+        <div id="turn-label"></div>
+        <div id="dice-panel">
+            <button id="roll-btn">🎲 رمي النرد</button>
+            <div id="dice-face">-</div>
+            <div id="dice-result"></div>
+        </div>
+        <div id="message"></div>
+        <div id="bot-thinking">🤖 يفكر الذكاء الاصطناعي...</div>
+    </div>
 
-<div id="main-menu"></div>
+    <div id="main-menu"></div>
+    <div id="move-picker"></div>
 
-<div id="move-picker"></div>
-
-<script src="https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/dist/cannon-es.js"></script>
-    
-<script src="js/main.js"></script>
+    <!-- كود اللعبة الرئيسي -->
+    <script src="js/main.js"></script>
 
 </body>
 </html>
