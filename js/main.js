@@ -1,6 +1,15 @@
 (function(){
 "use strict";
 
+  window.onerror = function (msg, url, line, col, err) {
+    alert(
+        "ERROR:\n" +
+        msg +
+        "\nLine: " + line +
+        "\nColumn: " + col
+    );
+};
+  
 const THEMES={
   crystal:{name:'Crystal',bg:0x07080b,fog:0x07080b,frame:0xc9a24b,base:0x050507,neutral:0xf5ede0,safe:0xffd700,accent:0xc9a24b,envTop:'#3a3f4d',envBot:'#050506'},
   obsidian:{name:'Obsidian Night',bg:0x0a0514,fog:0x0a0514,frame:0x8b5cf6,base:0x0d0518,neutral:0xe0d5f5,safe:0xa78bfa,accent:0x8b5cf6,envTop:'#4c1d95',envBot:'#0a0514'},
