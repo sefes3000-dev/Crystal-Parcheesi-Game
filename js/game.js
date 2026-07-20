@@ -88,4 +88,82 @@ function evaluateAvailableMoves() {
             }, 1000 + Math.random() * 1000);
         }
     }
+}function tryMovePawn(color, idx) {
+    if (gameState !== "awaiting_move") return;
+    if (color !== currentColor()) return;
+    if (gameMode !== "passplay" && isBotTurn) return;
+
+    const validMoves = currentTurnMoves.filter(
+        move => computeMovable(color, move).indexOf(idx) !== -1
+    );
+
+    if (validMoves.length === 0) return;
+
+    const uniqueMoves = validMoves.filter(
+        (v, i) => validMoves.indexOf(v) === i
+    );
+
+    if (uniqueMoves.length === 1) {
+        executeMove(color, idx, uniqueMoves[0]);
+    } else {
+        showMovePickerUI(color, idx, uniqueMoves);
+    }
+}
+
+function executeMove(color, idx, steps) {
+
+    const usedAt = currentTurnMoves.indexOf(steps);
+    if (usedAt > -1)
+        currentTurnMoves.splice(usedAt, 1);
+
+    clearMovableHighlights();
+
+    gameState = "animating";
+
+    const pawn = pawns[color][idx];
+
+    const fromK = pawn.k;
+    const toK = fromK === -1 ? 0 : fromK + steps;
+
+    const waypoints = [];
+
+    if (fromK === -1)
+        waypoints.push(0);
+    else
+        for (let k = fromK + 1; k <= toK; k++)
+            waypoints.push(k);
+
+    animateAlong(pawn, color, waypoints, () => {
+
+        pawn.k = toK;
+
+        const captured = handleCapture(color, toK);
+
+        if (toK === 56)
+            playChimeUp();
+        else if (captured)
+            playCapture();
+        else
+            playHop();
+
+        if (captured)
+            gameStats.captures++;
+
+        if (gameMode === "challenge" && captured) {
+            challengeProgress.current++;
+            updateChallengeHUD();
+        }
+
+        if (checkWin(color)) {
+            showWin(color);
+            gameState = "over";
+            return;
+        }
+
+        gameState = "awaiting_move";
+
+        evaluateAvailableMoves();
+
+    });
+
 }
