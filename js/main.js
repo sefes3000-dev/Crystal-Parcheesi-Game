@@ -91,7 +91,7 @@ function init(){
   window.addEventListener('resize',onResize);
   setTimeout(detectPerformance,2000);
   document.getElementById('loading').style.opacity='0';
-  setTimeout(()=>document.getElementById('loading').remove(),650);
+  setTimeout(function(){document.getElementById('loading').remove()},650);
   animate(0);
 }
 
@@ -124,7 +124,7 @@ function buildLights(){
   const goldRim=new THREE.DirectionalLight(0xdcba6b,1.2);
   goldRim.position.set(-8,5,-8);
   scene.add(goldRim);
-  COLORS.forEach(c=>{
+  COLORS.forEach(function(c){
     const[row,col]=YARD_CENTER[c];
     const p=gridToWorld(row,col,0.5);
     const pl=new THREE.PointLight(HEX[c],1.2,5,1.5);
@@ -250,7 +250,7 @@ function buildInfoTexture(color){
   ctx.beginPath();ctx.moveTo(60,500);ctx.lineTo(w-60,500);ctx.stroke();
   const rows=[['MATCHES',matches],['WINS',st.wins],['LOSSES',st.losses]];
   ctx.font='400 30px "Courier New", monospace';
-  rows.forEach((r,i)=>{
+  rows.forEach(function(r,i){
     const ry=560+i*76;
     ctx.textAlign='left';ctx.fillStyle='#b9c4c9';
     ctx.fillText(r[0],70,ry);
@@ -353,7 +353,7 @@ function buildBoard(){
   base.receiveShadow=true;
   boardGroup.add(base);
   const neutralMat=tileMaterial(theme.neutral,true);
-  PATH.forEach((rc,i)=>{
+  PATH.forEach(function(rc,i){
     const startColor=START_COLOR_BY_IDX[i];
     let mat;
     if(startColor)mat=tileMaterial(HEX[startColor],true);
@@ -362,7 +362,7 @@ function buildBoard(){
     if(startColor||SAFE_CELLS.has(i)){mat.userData.baseEmissive=mat.emissiveIntensity;pulsingMats.push(mat)}
     addTile(rc[0],rc[1],mat,SAFE_CELLS.has(i)&&!startColor);
   });
-  COLORS.forEach(c=>{HOME_STRETCH[c].forEach(rc=>{addTile(rc[0],rc[1],tileMaterial(HEX[c],true),false)})});
+  COLORS.forEach(function(c){HOME_STRETCH[c].forEach(function(rc){addTile(rc[0],rc[1],tileMaterial(HEX[c],true),false)})});
   buildCenterTrophy();
 }
 
@@ -389,7 +389,7 @@ function buildCenterTrophy(){
   cup.position.y=cupBaseY;
   cup.castShadow=true;
   group.add(cup);
-  [-1,1].forEach(side=>{
+  [-1,1].forEach(function(side){
     const handle=new THREE.Mesh(new THREE.TorusGeometry(0.34,0.045,12,28,Math.PI*1.3),gold);
     handle.rotation.y=Math.PI/2;
     handle.position.set(side*0.62,cupBaseY+0.42,0);
@@ -422,7 +422,7 @@ function addTile(row,col,mat,glow){
 }
 
 function buildExitMarkers(){
-  COLORS.forEach(c=>{
+  COLORS.forEach(function(c){
     const startRC=PATH[START_IDX[c]];
     const p=gridToWorld(startRC[0],startRC[1],0.2);
     const outline=new THREE.Mesh(new THREE.PlaneGeometry(CELL*0.74,CELL*0.74),new THREE.MeshBasicMaterial({color:0xc9a24b,side:THREE.DoubleSide}));
@@ -437,7 +437,7 @@ function buildExitMarkers(){
 }
 
 function buildCellNumbers(){
-  PATH.forEach((rc,i)=>{
+  PATH.forEach(function(rc,i){
     const c=document.createElement('canvas');c.width=96;c.height=96;
     const ctx=c.getContext('2d');
     ctx.fillStyle='rgba(0,0,0,0)';ctx.fillRect(0,0,96,96);
@@ -457,7 +457,7 @@ function buildCellNumbers(){
 }
 
 function buildYards(){
-  COLORS.forEach(c=>{
+  COLORS.forEach(function(c){
     const[row,col]=YARD_CENTER[c];
     const p=gridToWorld(row,col,0.02);
     const mat=new THREE.MeshPhysicalMaterial({color:HEX[c],transmission:0.28,roughness:0.1,thickness:0.8,ior:1.5,clearcoat:1,emissive:HEX[c],emissiveIntensity:0.4,envMapIntensity:0.7});
@@ -469,7 +469,7 @@ function buildYards(){
     const inner=new THREE.Mesh(new THREE.BoxGeometry(CELL*3.9,0.05,CELL*3.9),innerMat);
     inner.position.set(p.x,0.21,p.z);
     boardGroup.add(inner);
-    YARD_SLOT_OFFSETS.forEach(off=>{
+    YARD_SLOT_OFFSETS.forEach(function(off){
       const slotGeo=new THREE.RingGeometry(0.34,0.42,24);
       const slotMesh=new THREE.Mesh(slotGeo,new THREE.MeshBasicMaterial({color:HEX_LIGHT[c],transparent:true,opacity:0.6,side:THREE.DoubleSide}));
       slotMesh.rotation.x=-Math.PI/2;
@@ -485,7 +485,7 @@ function pawnMaterial(colorHex){
 }
 
 function buildPawns(){
-  COLORS.forEach(c=>{
+  COLORS.forEach(function(c){
     pawns[c]=[];
     const mat=pawnMaterial(HEX[c]);
     for(let i=0;i<4;i++){
@@ -534,7 +534,7 @@ function makeDieFaceTexture(n){
   ctx.strokeStyle='rgba(120,95,40,0.35)';ctx.lineWidth=6;
   ctx.strokeRect(6,6,size-12,size-12);
   ctx.fillStyle='#2a1f0f';
-  const dot=(x,y)=>{ctx.beginPath();ctx.arc(x,y,20,0,Math.PI*2);ctx.fill()};
+  const dot=function(x,y){ctx.beginPath();ctx.arc(x,y,20,0,Math.PI*2);ctx.fill()};
   const q=size*0.25,h=size*0.5,t=size*0.75;
   const layouts={1:[[h,h]],2:[[q,q],[t,t]],3:[[q,q],[h,h],[t,t]],4:[[q,q],[t,q],[q,t],[t,t]],5:[[q,q],[t,q],[h,h],[q,t],[t,t]],6:[[q,q],[t,q],[q,h],[t,h],[q,t],[t,t]]};
   layouts[n].forEach(p=>dot(p[0],p[1]));
@@ -582,7 +582,7 @@ function initPhysics(){
     {pos:[-safetyMargin-wallT/2,wallH/2,0],size:[wallT/2,wallH/2,span/2]},
     {pos:[safetyMargin+wallT/2,wallH/2,0],size:[wallT/2,wallH/2,span/2]}
   ];
-  wallDefs.forEach(w=>{
+  wallDefs.forEach(function(w){
     const body=new CANNON.Body({mass:0,material:groundMat});
     body.addShape(new CANNON.Box(new CANNON.Vec3(w.size[0],w.size[1],w.size[2])));
     body.position.set(w.pos[0],w.pos[1],w.pos[2]);
@@ -640,7 +640,7 @@ function readSingleDiceFace(mesh){
   const q=mesh.quaternion;
   const normals=[new THREE.Vector3(1,0,0),new THREE.Vector3(-1,0,0),new THREE.Vector3(0,1,0),new THREE.Vector3(0,-1,0),new THREE.Vector3(0,0,1),new THREE.Vector3(0,0,-1)];
   let best=-Infinity,bestI=0;
-  normals.forEach((n,i)=>{const wn=n.clone().applyQuaternion(q);const d=wn.dot(up);if(d>best){best=d;bestI=i}});
+  normals.forEach(function(n,i){const wn=n.clone().applyQuaternion(q);const d=wn.dot(up);if(d>best){best=d;bestI=i}});
   return DICE_FACE_VALUES[bestI];
 }
 
@@ -651,8 +651,8 @@ function getBotMove(){
   if(moves.length===0)return null;
 
   const validMoves=[];
-  pawns[color].forEach((pawn,idx)=>{
-    moves.forEach(move=>{
+  pawns[color].forEach(function(pawn,idx){
+    moves.forEach(function(move){
       if(canMovePawn(color,idx,move)){
         validMoves.push({pawnIdx:idx,move:move,score:evaluateMove(color,idx,move)});
       }
@@ -661,7 +661,7 @@ function getBotMove(){
 
   if(validMoves.length===0)return null;
 
-  validMoves.sort((a,b)=>b.score-a.score);
+  validMoves.sort(function(a,b){return b.score-a.score;});
 
   if(botDifficulty==='easy'){
     return validMoves[Math.floor(Math.random()*validMoves.length)];
@@ -684,9 +684,9 @@ function evaluateMove(color,pawnIdx,steps){
   if(toK>=0&&toK<=50){
     const globalIdx=(START_IDX[color]+toK)%52;
     if(!SAFE_CELLS.has(globalIdx)){
-      COLORS.forEach(oc=>{
+      COLORS.forEach(function(oc){
         if(oc===color)return;
-        pawns[oc].forEach(op=>{
+        pawns[oc].forEach(function(op){
           if(op.k<0||op.k>50)return;
           const og=(START_IDX[oc]+op.k)%52;
           if(og===globalIdx)score+=80;
@@ -705,9 +705,9 @@ function evaluateMove(color,pawnIdx,steps){
 
   if(fromK>=0&&fromK<=50){
     const currentGlobal=(START_IDX[color]+fromK)%52;
-    COLORS.forEach(oc=>{
+    COLORS.forEach(function(oc){
       if(oc===color)return;
-      pawns[oc].forEach(op=>{
+      pawns[oc].forEach(function(op){
         if(op.k<0||op.k>50)return;
         const og=(START_IDX[oc]+op.k)%52;
         const dist=(currentGlobal-og+52)%52;
@@ -734,7 +734,7 @@ function executeBotMove(){
   const botMove=getBotMove();
   if(!botMove){
     showMsg('البوت ليس لديه حركات متاحة');
-    setTimeout(()=>{advanceTurn()},1300);
+    setTimeout(function(){advanceTurn()},1300);
     return;
   }
 
@@ -751,7 +751,7 @@ function executeBotMove(){
   if(fromK===-1)waypoints.push(0);
   else for(let k=fromK+1;k<=toK;k++)waypoints.push(k);
 
-  animateAlong(pawn,currentColor(),waypoints,()=>{
+  animateAlong(pawn,currentColor(),waypoints,function(){
     pawn.k=toK;
     const captured=handleCapture(currentColor(),toK);
     if(toK===56)playChimeUp();else if(captured)playCapture();else playHop();
@@ -767,7 +767,7 @@ function currentColor(){return COLORS[currentPlayerIdx]}
 
 function computeMovable(color,roll){
   const list=[];
-  pawns[color].forEach((pawn,i)=>{
+  pawns[color].forEach(function(pawn,i){
     if(pawn.k===-1){if(roll===6)list.push(i)}
     else if(pawn.k<56){const newK=pawn.k+roll;if(newK<=56)list.push(i)}
   });
@@ -775,11 +775,11 @@ function computeMovable(color,roll){
 }
 
 function clearMovableHighlights(){
-  COLORS.forEach(c=>pawns[c].forEach(p=>{p._pulse=false;p.mesh.scale.set(1,1,1)}));
+  COLORS.forEach(c=>pawns[c].forEach(function(p){p._pulse=false;p.mesh.scale.set(1,1,1)}));
 }
 
 function highlightMovable(color,indices){
-  indices.forEach(i=>{pawns[color][i]._pulse=true});
+  indices.forEach(function(i){pawns[color][i]._pulse=true});
 }
 
 function onDiceSettled(){
@@ -810,8 +810,8 @@ function evaluateAvailableMoves(){
   }
 
   let totalValidPawns=[];
-  currentTurnMoves.forEach(move=>{
-    computeMovable(color,move).forEach(pIdx=>{
+  currentTurnMoves.forEach(function(move){
+    computeMovable(color,move).forEach(function(pIdx){
       if(totalValidPawns.indexOf(pIdx)===-1)totalValidPawns.push(pIdx);
     });
   });
@@ -819,14 +819,14 @@ function evaluateAvailableMoves(){
   if(totalValidPawns.length===0){
     showMsg('لا يوجد حركات متاحة — ينتقل الدور');
     gameState='awaiting_move';
-    setTimeout(()=>{advanceTurn()},1300);
+    setTimeout(function(){advanceTurn()},1300);
   }else{
     highlightMovable(color,totalValidPawns);
     showMsg('انقر على الحجر المضيء — النرد المتبقي: '+currentTurnMoves.join(', '));
 
     if(gameMode!=='passplay'&&isBotTurn){
       document.getElementById('bot-thinking').classList.add('show');
-      setTimeout(()=>{
+      setTimeout(function(){
         document.getElementById('bot-thinking').classList.remove('show');
         executeBotMove();
       },1000+Math.random()*1000);
@@ -842,7 +842,7 @@ function tryMovePawn(color,idx){
   const validMoves=currentTurnMoves.filter(move=>computeMovable(color,move).indexOf(idx)!==-1);
   if(validMoves.length===0)return;
 
-  const uniqueMoves=validMoves.filter((v,i)=>validMoves.indexOf(v)===i);
+  const uniqueMoves=validMoves.filter(function(v,i){return validMoves.indexOf(v)===i;});
   if(uniqueMoves.length===1){
     executeMove(color,idx,uniqueMoves[0]);
   }else{
@@ -864,7 +864,7 @@ function executeMove(color,idx,steps){
   if(fromK===-1)waypoints.push(0);
   else for(let k=fromK+1;k<=toK;k++)waypoints.push(k);
 
-  animateAlong(pawn,color,waypoints,()=>{
+  animateAlong(pawn,color,waypoints,function(){
     pawn.k=toK;
     const captured=handleCapture(color,toK);
     if(toK===56)playChimeUp();else if(captured)playCapture();else playHop();
@@ -903,14 +903,14 @@ function showMovePickerUI(color,pawnIdx,options){
   picker.style.boxShadow='0 12px 40px rgba(0,0,0,.6)';
   picker.innerHTML='<p style="margin:0 0 12px 0; font-size:13px; letter-spacing:.4px; color:#cfc9bc;">حرك هذا الحجر بـ:</p>';
 
-  options.forEach(steps=>{
+  options.forEach(function(steps){
     const btn=document.createElement('button');
     btn.textContent=steps+' خطوات';
     btn.className='move-picker-btn';
     btn.style.margin='0 6px';
     btn.style.background=hexStr;
     btn.style.color='#101116';
-    btn.onclick=()=>{picker.remove();executeMove(color,pawnIdx,steps)};
+    btn.onclick=function(){picker.remove();executeMove(color,pawnIdx,steps)};
     picker.appendChild(btn);
   });
 
@@ -922,9 +922,9 @@ function handleCapture(color,k){
   const globalIdx=(START_IDX[color]+k)%52;
   if(SAFE_CELLS.has(globalIdx))return false;
   let captured=false;
-  COLORS.forEach(oc=>{
+  COLORS.forEach(function(oc){
     if(oc===color)return;
-    pawns[oc].forEach(op=>{
+    pawns[oc].forEach(function(op){
       if(op.k<0||op.k>50)return;
       const og=(START_IDX[oc]+op.k)%52;
       if(og===globalIdx){op.k=-1;placePawnAtYard(op,oc);captured=true}
@@ -950,7 +950,7 @@ function advanceTurn(){
   updateTurnUI();
 
   if(gameMode!=='passplay'&&isBotTurn&&gameState==='awaiting_roll'){
-    setTimeout(()=>{if(gameState==='awaiting_roll')rollDice()},800+Math.random()*700);
+    setTimeout(function(){if(gameState==='awaiting_roll')rollDice()},800+Math.random()*700);
   }
 }
 
@@ -983,7 +983,7 @@ function showMsg(text){
   el.textContent=text;
   el.classList.add('show');
   if(msgTimer)clearTimeout(msgTimer);
-  msgTimer=setTimeout(()=>el.classList.remove('show'),2600);
+  msgTimer=setTimeout(function(){el.classList.remove('show')},2600);
 }
 
 function setRollBtnEnabled(v){
@@ -1012,7 +1012,7 @@ function updateChallengeHUD(){
 
 function showWin(color){
   playerStats[color].wins++;
-  COLORS.forEach(c=>{if(c!==color)playerStats[c].losses++});
+  COLORS.forEach(function(c){if(c!==color)playerStats[c].losses++});
   if(gameStats.moves<playerStats[color].bestMoves)playerStats[color].bestMoves=gameStats.moves;
   COLORS.forEach(c=>refreshInfoScreen(c));
 
@@ -1028,7 +1028,7 @@ function showWin(color){
 }
 
 function resetGame(){
-  COLORS.forEach(c=>{pawns[c].forEach(p=>{p.k=-1;placePawnAtYard(p,c)})});
+  COLORS.forEach(function(c){pawns[c].forEach(function(p){p.k=-1;placePawnAtYard(p,c)})});
   currentPlayerIdx=0;
   gameState='awaiting_roll';
   lastDicePair=null;
@@ -1152,7 +1152,7 @@ window.startChallenge=function(){
 
 /* ======================= SETTINGS FUNCTIONS ======================= */
 window.selectTheme=function(el,themeName){
-  document.querySelectorAll('.color-option').forEach(o=>{o.classList.remove('selected');o.querySelector('.check')?.remove()});
+  document.querySelectorAll('.color-option').forEach(function(o){o.classList.remove('selected');o.querySelector('.check')?.remove()});
   el.classList.add('selected');
   const check=document.createElement('div');
   check.className='check';
@@ -1177,7 +1177,7 @@ function rebuildScene(){
   buildPawns();
   buildDice();
 
-  COLORS.forEach(c=>{pawns[c].forEach(p=>{p.k=-1;placePawnAtYard(p,c)})});
+  COLORS.forEach(function(c){pawns[c].forEach(function(p){p.k=-1;placePawnAtYard(p,c)})});
 }
 
 window.toggleAutoGfx=function(el){
@@ -1185,7 +1185,7 @@ window.toggleAutoGfx=function(el){
   autoGfx=el.classList.contains('on');
 };
 window.setManualQuality=function(q){
-  document.querySelectorAll('.gfx-mini').forEach(b=>{b.style.background='rgba(255,255,255,.05)';b.style.color='#cfc9bc'});
+  document.querySelectorAll('.gfx-mini').forEach(function(b){b.style.background='rgba(255,255,255,.05)';b.style.color='#cfc9bc'});
   document.querySelector('.gfx-mini[data-q="'+q+'"]').style.background='#c9a24b';
   document.querySelector('.gfx-mini[data-q="'+q+'"]').style.color='#141414';
   applyGraphicsSettings(q);
@@ -1337,7 +1337,7 @@ function applyGraphicsSettings(quality){
     else{child.castShadow=child.userData.origCastShadow;child.receiveShadow=child.userData.origReceiveShadow}
 
     const mats=Array.isArray(child.material)?child.material:[child.material];
-    mats.forEach(mat=>{
+    mats.forEach(function(mat){
       if(!mat||mat.transmission===undefined)return;
       if(!mat.userData.origSaved){
         mat.userData.origTransmission=mat.transmission;
@@ -1408,12 +1408,12 @@ function tone(freq,t0,dur,type,vol){
 
 function playHop(){if(!audioCtx||!soundEnabled)return;const t=audioCtx.currentTime;tone(520,t,0.09,'sine',0.12);tone(680,t+0.05,0.08,'sine',0.09)}
 function playCapture(){if(!audioCtx||!soundEnabled)return;const t=audioCtx.currentTime;tone(420,t,0.15,'sawtooth',0.1);tone(260,t+0.08,0.2,'sawtooth',0.1)}
-function playChimeUp(){if(!audioCtx||!soundEnabled)return;const t=audioCtx.currentTime;[523,659,784].forEach((f,i)=>tone(f,t+i*0.09,0.25,'sine',0.13))}
+function playChimeUp(){if(!audioCtx||!soundEnabled)return;const t=audioCtx.currentTime;[523,659,784].forEach(function(f,i){tone(f,t+i*0.09,0.25,'sine',0.13))}
 function playWinJingle(){
   ensureAudio();
   if(!audioCtx||!soundEnabled)return;
   const t=audioCtx.currentTime;
-  [523,659,784,1046,784,1046].forEach((f,i)=>tone(f,t+i*0.14,0.3,'triangle',0.14));
+  [523,659,784,1046,784,1046].forEach(function(f,i){tone(f,t+i*0.14,0.3,'triangle',0.14));
 }
 
 /* ======================= MAIN LOOP ======================= */
@@ -1444,14 +1444,14 @@ function animate(timestamp){
 
   if(!reduceMotion){
     const time=performance.now()*0.004;
-    COLORS.forEach(c=>pawns[c].forEach(p=>{
+    COLORS.forEach(c=>pawns[c].forEach(function(p){
       if(p._pulse){
         const s=1+Math.sin(time)*0.14+0.1;
         p.mesh.scale.set(s,s,s);
         p.gem.position.y=0.42+Math.sin(time*1.4)*0.05;
       }
     }));
-    pulsingMats.forEach(mat=>{
+    pulsingMats.forEach(function(mat){
       mat.emissiveIntensity=mat.userData.baseEmissive+Math.sin(time*0.5)*0.15;
     });
   }
